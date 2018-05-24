@@ -10,7 +10,6 @@
             </van-field>
             <van-field icon="browsing-history" v-model="password" :type="passwordType" label="密码" placeholder="请输入密码" required @click-icon="passwordShow">
             </van-field>
-
             <div class="loginErro">{{loginErro}}</div>
             <van-button class="loginButton" size="large" @click="login">登陆</van-button>
         </van-tab>
@@ -55,27 +54,33 @@ export default {
       form: {
         username: "",
         password: "",
-        email:""
+        email: ""
       }
     };
   },
   methods: {
-    login() {},
+    login() {
+      let vm = this;
+      setCookie("yuyu", "{'user':'hanshuo'}", 100);
+      if (getCookie("yuyu")) {
+        vm.$router.push("/");
+      }
+    },
     register() {
       let data = this.form;
       let vm = this;
-      // postJSON("/register", data).then(function(res) {
-      // console.log(res)
-      //   if (res.text == "该账号已被注册") {
-      //     vm.registerErro = res.text;
-      //   } else {
-          // setCookie("yuyu",res.text,100);
-          setCookie("yuyu","{'user':'hanshuo'}",100);
-          if(getCookie("yuyu")){
-            vm.$router.push("/");
-          }
+      postJSON("/index", data).then(function(res) {
+        console.log(res.text);
+        // if (res.text == "该账号已被注册") {
+        //   vm.registerErro = res.text;
+        // } else {
+        // setCookie("yuyu", res.text, 100);
+        // setCookie("yuyu", "{'user':'hanshuo'}", 100);
+        // if (getCookie("yuyu")) {
+        //   vm.$router.push("/");
         // }
-      // });
+        // }
+      });
     },
     goBack() {
       this.$router.goBack();

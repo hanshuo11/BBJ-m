@@ -27,7 +27,6 @@ window.fetchGet = function (url, data, api) {
 // cookie的设置
 window.getCookie = function (cookieName) {
     var strCookie = document.cookie;
-
     var arrCookie = strCookie.split("; ");
     for (var i = 0; i < arrCookie.length; i++) {
         var arr = arrCookie[i].split("=");

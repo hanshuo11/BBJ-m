@@ -5,8 +5,7 @@
   "author": "hanshuo",
   "private": true,
   "scripts": {
-    "server": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
-    "start": "npm run dev",
+    "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
     "dist": "node build/build.js"
   },
   "dependencies": {
