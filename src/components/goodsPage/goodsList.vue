@@ -7,24 +7,24 @@
     <van-tabs :active="0" @click="handleTabClick" >
         <van-tab v-for="(inf,index) in goodesList" :title="inf.title" :key="index">
             <ul>
-              <router-link class="classesSpan" to="/goodsList/goods">
-                <li class="goodesInf" v-for="(list,index) in inf.list" :key="index" @click="toGoodes(list.id)">
+              <a class="classesSpan">
+                <li class="goodesInf" v-for="(list,index) in inf.list" :key="index" @click="toGoodes(list.goods_id)">
                   <div class="goodesImg">
-                    <img :src="list.imgUrl" alt="">
+                    <img :src="list.goods_show_img" alt="">
                   </div>
                   <div class="goodesIntr">
-                    <h3>{{list.title}}</h3>
-                    <span class="sold">月销{{list.sales}} </span>
-                    <span class="sold space">{{list.store}}</span>
+                    <h3>{{list.goods_title}}</h3>
+                    <span class="sold">月销{{list.sales}}笔</span>
+                    <span class="sold space">{{list.store_name}}</span>
                     <div class="line"></div>
                     <div class="price">
                       <i class="iconfont money">&#xe6b7;</i>
-                      <span class="num">{{list.price}}</span>
-                      <span class="fee">运费：{{list.fre}} </span>
+                      <span class="num">{{list.goods_newPrice}}</span>
+                      <span class="fee">运费：{{list.goods_repertory}} </span>
                     </div>
                   </div>
                 </li>
-              </router-link>
+              </a>
             </ul>
         </van-tab>
     </van-tabs>
@@ -51,55 +51,55 @@ export default {
           title: "综合",
           list: [
             {
-              id: "123",
-              title:
+              goods_id: "123",
+              goods_title:
                 "臻味 坚果礼盒 原料进口坚果果干 年货休闲零食大礼包 不忘初心1680g/盒",
-              imgUrl:
+              goods_show_img:
                 "https://m.360buyimg.com/mobilecms/s357x357_jfs/t14581/105/2211676405/269003/4301a86b/5a7a8b29N7fdd27bf.jpg!q50.jpg",
-              price: "89.00",
-              store: "百草味旗舰店",
+              goods_newPrice: "89.00",
+              store_name: "百草味旗舰店",
               sales: "6万笔",
-              fre: "免费"
+              goods_repertory: "免费"
             },
             {
-              id: "456",
-              title: "三只松鼠 坚果炒货 休闲零食 开心果225g/袋",
-              imgUrl:
+              goods_id: "456",
+              goods_title: "三只松鼠 坚果炒货 休闲零食 开心果225g/袋",
+              goods_show_img:
                 "//img.alicdn.com/bao/uploaded/i1/880734502/TB2sXyuqFXXXXbxXpXXXXXXXXXX_!!880734502.jpg_400x400Q50s50.jpg_.webp",
-              price: "39.00",
-              store: "三只松鼠旗舰店",
+              goods_newPrice: "39.00",
+              store_name: "三只松鼠旗舰店",
               sales: "3万笔",
-              fre: "免费"
+              goods_repertory: "免费"
             },
             {
-              id: "789",
-              title: "洽洽 年货坚果炒货 五香味 香瓜子308g/袋",
-              imgUrl:
+              goods_id: "789",
+              goods_title: "洽洽 年货坚果炒货 五香味 香瓜子308g/袋",
+              goods_show_img:
                 "https://m.360buyimg.com/mobilecms/s357x357_jfs/t14281/61/824785556/474495/2cb01128/5a3a3de7Nf6b6fe58.jpg!q50.jpg",
-              price: "55.00",
-              store: "洽洽旗舰店",
+              goods_newPrice: "55.00",
+              store_name: "洽洽旗舰店",
               sales: "4万笔",
-              fre: "免费"
+              frgoods_repertorye: "免费"
             },
             {
-              id: "112233",
-              title: "三只松鼠 坚果炒货 零食奶油味 夏威夷果265g/袋",
-              imgUrl:
+              goods_id: "112233",
+              goods_title: "三只松鼠 坚果炒货 零食奶油味 夏威夷果265g/袋",
+              goods_show_img:
                 "https://m.360buyimg.com/mobilecms/s357x357_jfs/t5704/354/3536189279/266628/4efd8c14/593e4964N1b9e4b12.jpg!q50.jpg",
-              price: "69.00",
-              store: "三只松鼠旗舰店",
+              goods_newPrice: "69.00",
+              store_name: "三只松鼠旗舰店",
               sales: "1万笔",
-              fre: "免费"
+              frgoods_repertorye: "免费"
             },
             {
-              id: "445566",
-              title: "三只松鼠坚果炒货每日坚果碧根果120g",
-              imgUrl:
+              goods_id: "445566",
+              goods_title: "三只松鼠坚果炒货每日坚果碧根果120g",
+              goods_show_img:
                 "https://m.360buyimg.com/mobilecms/s357x357_jfs/t5794/252/3491686282/230788/65f00f04/593e4cf6N3f4d50ec.jpg!q50.jpg",
-              price: "48.00",
-              store: "三只松鼠旗舰店",
+              goods_newPrice: "48.00",
+              store_name: "三只松鼠旗舰店",
               sales: "3万笔",
-              fre: "免费"
+              frgoods_repertorye: "免费"
             }
           ]
         },
@@ -131,13 +131,27 @@ export default {
     },
     toGoodes(item) {
       console.log(item);
+       this.$store.commit("setGoodsID", item);
+       this.$router.push("/goodsList/goods");
+    },
+    getSearchGoods(key){
+      var _this=this;
+      postJSON("/user/getSearchGoods", {
+        key: key
+      }).then(function(res) {
+        if (res.body) {
+          console.log(res.body);
+          _this.goodesList[0].list=res.body;
+        }
+      });
     }
   },
   mounted: function() {
-    // this.$store.commit("getQuery");
-    // this.$store.dispatch("getQuery").then(res => {
-    //   console.log(res.data);
-    // });
+    var key=this.$store.state.searchKey;
+    if(key){
+      this.goodesList[0].list=[];
+      this.getSearchGoods(key);
+    }
   }
 };
 </script>

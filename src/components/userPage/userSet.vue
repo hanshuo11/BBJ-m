@@ -77,8 +77,8 @@ export default {
     },
     loginOut() {
       let vm = this;
-      clearCookie("yuyu");
-      if (getCookie("yuyu")) {
+      sessionStorage.removeItem("user");
+      if (sessionStorage.getItem("user")) {
         alert("退出登录失败");
       } else {
         vm.$router.push("/");

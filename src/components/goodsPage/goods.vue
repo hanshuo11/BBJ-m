@@ -6,19 +6,19 @@
     </van-nav-bar>
 
     <van-swipe :autoplay="3000" class="goods-swipe">
-      <van-swipe-item v-for="(thumb,index) in goodes.thumb" :key="index">
-        <img v-lazy="thumb" >
+      <van-swipe-item >
+        <img v-lazy="goodsInfForm.goods_show_img" >
       </van-swipe-item>
     </van-swipe>
 
     <van-cell-group>
       <van-cell>
-        <div class="goods-title">{{ goodes.title }}</div>
-        <div class="goods-price">{{ formatPrice(goodes.price) }}</div>
+        <div class="goods-title">{{ goodsInfForm.goods_store_name }}</div>
+        <div class="goods-price">￥{{ goodsInfForm.goods_newPrice }}</div>
       </van-cell>
       <van-cell class="goods-express">
-        <van-col span="10">运费：{{ goodes.fre }}</van-col>
-        <van-col span="14">剩余：{{ goodes.remain }}</van-col>
+        <van-col span="9" style="padding-left:10px;">运费：{{ goodsInfForm.goods_freight }}</van-col>
+        <van-col span="14">剩余：{{ goodsInfForm.goods_repertory }}</van-col>
       </van-cell>
     </van-cell-group>
 
@@ -29,23 +29,25 @@
     <van-cell-group class="goods-cell-group">
       <van-cell  icon="shop" to="/store" isLink>
         <template slot="title">
-          <span class="van-cell-text">hanshuo的店</span>
+          <span class="van-cell-text">{{goodsInfForm.store_name}}</span>
           <van-tag type="danger">官方</van-tag>
         </template>
       </van-cell>
       <van-cell value="商品详情" isLink />
     </van-cell-group>
+    <div v-for="(item,index) in goodsInfImg" :key="index">
+      <img style="max-width: 100%;" :src="item.goods_inf_url">
+    </div>
 
     
     <van-sku
       v-model="showBase"
       :sku="sku"
       :goods="goods"
-      :goods-id="goodes.id"
+      :goods-id="goodsInfForm.id"
       :hide-stock="sku.hide_stock"
       @buy-clicked="onBuyClicked"
       @add-cart="onAddCartClicked"
-      
     />
     
     <van-goods-action>
@@ -95,16 +97,15 @@ export default {
     return {
       showBase: false,
       goodsNum: "15",
-      goodes: {
-        id: "2259",
-        title: "美国伽力果（约680g/3个）",
-        price: 2680,
-        fre: "免运费",
-        remain: 19,
-        thumb: [
+      goodsInfForm: {
+        goods_id: "2259",
+        goods_store_name: "美国伽力果（约680g/3个）",
+        goods_newPrice: 2680,
+        goods_freight: "免运费",
+        goods_repertory: 19,
+        goods_show_img:
           "https://img.yzcdn.cn/public_files/2017/10/24/e5a5a02309a41f9f5def56684808d9ae.jpeg",
-          "https://img.yzcdn.cn/public_files/2017/10/24/1791ba14088f9c2be8c610d0a6cc0f93.jpeg"
-        ]
+        store_name: "hanshuo的店"
       },
       sku: {
         // 所有sku规格类目与其值的从属关系，比如商品有颜色和尺码两大类规格，颜色下面又有红色和蓝色两个规格值。
@@ -115,13 +116,8 @@ export default {
             v: [
               {
                 id: "30349", // skuValueId：规格值 id
-                name: "红色", // skuValueName：规格值名称
+                name: "标准", // skuValueName：规格值名称
                 imgUrl: "https://img.yzcdn.cn/2.jpg" // 规格类目图片，只有第一个规格类目可以定义图片
-              },
-              {
-                id: "1215",
-                name: "蓝色",
-                imgUrl: "https://img.yzcdn.cn/2.jpg"
               }
             ],
             k_s: "s1" // skuKeyStr：sku 组合列表（下方 list）中当前类目对应的 key 值，value 值会是从属于当前类目的一个规格值 id
@@ -131,20 +127,12 @@ export default {
         list: [
           {
             id: 1, // skuId，下单时后端需要
-            price: 11100, // 价格（单位分）
+            price: 11000, // 价格（单位分）
             s1: "30349", // 规格类目 k_s 为 s1 的对应规格值 id
             stock_num: 1110 // 当前 sku 组合对应的库存
-          },
-          {
-            id: 1, // skuId，下单时后端需要
-            price: 11100, // 价格（单位分）
-            s1: "1215", // 规格类目 k_s 为 s1 的对应规格值 id
-            // s2: "1215", // 规格类目 k_s 为 s2 的对应规格值 id
-            // s3: "0", // 最多包含3个规格值，为0表示不存在该规格
-            stock_num: 110 // 当前 sku 组合对应的库存
           }
         ],
-        price: "100", // 默认价格（单位元）
+        price: "110", // 默认价格（单位元）
         stock_num: 21, // 商品总库存
         // collection_id: 2261, // 无规格商品 skuId 取 collection_id，否则取所选 sku 组合对应的 id
         none_sku: false, // 是否无规格商品
@@ -152,10 +140,10 @@ export default {
       },
       goods: {
         // 商品标题
-        title: "测试商品",
         // 默认商品 sku 缩略图
         picture: "https://img.yzcdn.cn/2.jpg"
-      }
+      },
+      goodsInfImg:[]
     };
   },
   computed: {
@@ -168,30 +156,47 @@ export default {
       this.$router.goBack();
     },
     formatPrice() {
-      return "¥" + (this.goodes.price / 100).toFixed(2);
+      return "¥" + (this.goodsInfForm.price / 100).toFixed(2);
     },
     onBuyClicked(item) {
       console.log(item);
     },
     onAddCartClicked(item) {
-      var data= item.selectedSkuComb;
-      data.title = this.goodes.title;
-      // console.log(item.selectedSkuComb);
-      // console.log(data);
-      this.$store.commit("addCart",data);
-      console.log(res)
-      // if (!res) {
-      //   Dialog.alert({
-      //     message: "请勿重复添加"
-      //   });
-      // }
+      var data=this.goodsInfForm;
+      data.num=1;
+      this.$store.commit("addCart", data);
+      console.log(data);
+    },
+    getGoodsInf(id) {
+      // getGoodsInfImg
+      var _this = this;
+      postJSON("/user/getGoodsInf", {
+        goods_id: id
+      }).then(function(res) {
+        if (res.body) {
+          console.log(res.body);
+          _this.goodsInfForm = res.body[0];
+          _this.getGoodsInfImg(id);
+        }
+      });
+    },
+    getGoodsInfImg(id) {
+      var _this = this;
+      postJSON("/user/getGoodsInfImg", {
+        goods_id: id
+      }).then(function(res) {
+        if (res.body) {
+          console.log(res.body);
+          _this.goodsInfImg = res.body;
+        }
+      });
     }
   },
   mounted: function() {
-    // this.$store.commit("getQuery");
-    // this.$store.dispatch("getQuery").then(res => {
-    //   console.log(res.data);
-    // });
+    var goodsId = this.$store.state.goods_id;
+    if (goodsId) {
+      this.getGoodsInf(goodsId);
+    }
   }
 };
 </script>

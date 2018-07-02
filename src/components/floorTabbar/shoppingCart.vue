@@ -8,19 +8,18 @@
     <van-checkbox-group class="card-goods" v-model="checkedGoods">
       <van-checkbox
         class="card-goods__item"
-        v-for="item in goods"
-        :key="item.id"
-        :name="item.id"
+        v-for="item in goodsList"
+        :key="item.goods_id"
+        :name="item.goods_id"
       >
         <van-card
-          :title="item.title"
-          :desc="item.desc+' 规格：'+item.num"
-          :price="formatPrice(item.price)"
-          :thumb="item.thumb"
+          :title="item.goods_store_name"
+          :price="formatPrice(item.goods_newPrice)"
+          :thumb="item.goods_show_img"
         />
         <div @click.stop>
            <van-stepper v-model="item.num" />
-           <span class="deleteGoods" @click="deleteGoods(item.id)">删除</span>
+           <span class="deleteGoods" @click="deleteGoods(item.goods_id)">删除</span>
         </div>
         
       </van-checkbox>
@@ -58,7 +57,8 @@ export default {
   },
   data() {
     return {
-      checkedGoods: []
+      checkedGoods: [],
+      goodsList: []
     };
   },
   computed: {
@@ -67,13 +67,15 @@ export default {
       return "结算" + (count ? `(${count})` : "");
     },
     totalPrice() {
-      return this.goods.reduce(
-        (total, item) =>
-          total +(this.checkedGoods.indexOf(item.id) !== -1? item.price * item.num: 0),0
-          );
-    },
-    goods(){
-      return this.$store.state.cartGoods;
+      var _this = this;
+      return this.goodsList.reduce(function(total, item) {
+        return (
+          total +
+          (_this.checkedGoods.indexOf(item.goods_id) !== -1
+            ? item.goods_newPrice * item.num * 100
+            : 0)
+        );
+      }, 0);
     }
   },
   methods: {
@@ -81,27 +83,49 @@ export default {
       this.$router.goBack();
     },
     formatPrice(price) {
-      return (price / 100).toFixed(2);
+      // console.log(price)
+      return (price / 1).toFixed(2);
     },
     onSubmit() {
-      console.log(this.totalPrice / 100);
+      var _this = this;
+      var userData = JSON.parse(sessionStorage.getItem("user"));
+      // console.log(this.checkedGoods);
+      postJSON("/user/buyGoods", {
+        sum_price: _this.totalPrice / 100,
+        goodsList: _this.checkedGoods,
+        indent_number: _this.indent_number(),
+        user_id: userData.user_id
+      }).then(function(res) {
+        if (res.body) {
+          var arrlength=_this.checkedGoods.length;
+          for(var i=0;i<arrlength;i++ ){
+            _this.deleteGoods(_this.checkedGoods[i]);
+          }
+        }
+      });
     },
     deleteGoods(id) {
       let gId = id;
       let index = this.checkedGoods.indexOf(gId);
-      console.log("坐标：" + index);
-      for (let i = 0; i < this.goods.length; i++) {
-        if (this.goods[i].id == gId) {
-          this.goods.splice(i, 1);
+      for (let i = 0; i < this.goodsList.length; i++) {
+        if (this.goodsList[i].goods_id == gId) {
+          this.goodsList.splice(i, 1);
         }
       }
       this.checkedGoods.splice(index, 1);
+    },
+    indent_number() {
+      var outTradeNo = ""; //订单号
+      for (var i = 0; i < 5; i++) {
+        outTradeNo += Math.floor(Math.random() * 10);
+      }
+      outTradeNo = Date.parse(new Date()) + outTradeNo; //时间戳，用来生成订单号。
+      return outTradeNo;
     }
   },
-  mounted:function(){
-    // console.log(this.$store.state.carGoods);
+  mounted: function() {
+    this.goodsList = this.$store.state.cartGoods;
   }
-  
 };
 </script>
 

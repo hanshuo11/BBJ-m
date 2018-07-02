@@ -12,7 +12,7 @@
     </div>
 
     <van-cell-group class="user-group">
-      <van-cell  title="我的订单" isLink />
+      <van-cell  title="我的订单" isLink to="/userIndent" />
       <van-tabbar class="noFixed">
         <van-tabbar-item icon="pending-payment">待付款</van-tabbar-item>
         <van-tabbar-item icon="logistics" >待收货</van-tabbar-item>

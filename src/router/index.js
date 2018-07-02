@@ -6,6 +6,7 @@ import Index from '@/components/index'
 // userPage
 import Login from '@/components/userPage/login'
 import UserIndex from '@/components/userPage/userIndex'
+import userIndent from '@/components/userPage/userIndent'
 import UserSet from '@/components/userPage/userSet'
 
 // goodsPage
@@ -47,6 +48,10 @@ export default new Router({
             path: '/userIndex/set',
             name: 'userSet',
             component: UserSet
+        },{
+            path: '/userIndent',
+            name: 'userIndent',
+            component: userIndent
         },
         {
             path: '/floorTabbar/classes',

@@ -4,7 +4,7 @@
       <van-icon class="goback" @click="goBack" name="arrow" slot="left" />
     </van-nav-bar>
     <div class="user-content">
-      <van-tabs >
+      <van-tabs>
         <van-tab  class="tabsContent"  :title="'用户登陆'">
             <van-field v-model="username" label="账号" placeholder="邮箱/已验证手机" required icon="clear" @click-icon="username = ''">
             </van-field>
@@ -13,7 +13,6 @@
             <div class="loginErro">{{loginErro}}</div>
             <van-button class="loginButton" size="large" @click="login">登陆</van-button>
         </van-tab>
-
         <van-tab class="tabsContent" :title="'账号注册'">
           <van-field icon="clear" v-model="form.username"  @click-icon="form.username = ''"  placeholder="用户名">
           </van-field>
@@ -49,7 +48,7 @@ export default {
       password: "",
       passwordType: "password",
       passswordFlag: false,
-      loginErro: "图片验证码错误，请重试",
+      loginErro: "",
       registerErro: "",
       form: {
         username: "",
@@ -61,25 +60,28 @@ export default {
   methods: {
     login() {
       let vm = this;
-      setCookie("yuyu", "{'user':'hanshuo'}", 100);
-      if (getCookie("yuyu")) {
-        vm.$router.push("/");
-      }
+      postJSON("/user/login", {
+        user_name:vm.username,
+        user_password:vm.password
+      }).then(function(res) {
+        if (res.body) {
+          sessionStorage.setItem("user", JSON.stringify(res.body[0]));
+          vm.$router.push("/");
+        } else {
+          vm.loginErro = res.text;
+        }
+      });
     },
     register() {
       let data = this.form;
       let vm = this;
-      postJSON("/index", data).then(function(res) {
-        console.log(res.text);
-        // if (res.text == "该账号已被注册") {
-        //   vm.registerErro = res.text;
-        // } else {
-        // setCookie("yuyu", res.text, 100);
-        // setCookie("yuyu", "{'user':'hanshuo'}", 100);
-        // if (getCookie("yuyu")) {
-        //   vm.$router.push("/");
-        // }
-        // }
+      postJSON("/user/register", data).then(function(res) {
+        if (res.text == "该账号已被注册") {
+          vm.registerErro = res.text;
+        } else {
+          //  sessionStorage.setItem("user", JSON.stringify(res.body[0]));
+          vm.$router.go(0);
+        }
       });
     },
     goBack() {
@@ -95,7 +97,7 @@ export default {
     }
   },
   mounted: function() {
-    console.log(this.$store.state.loginErro);
+    // console.log(this.$store.state.loginErro);
   }
 };
 </script>

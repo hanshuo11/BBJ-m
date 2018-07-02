@@ -212,54 +212,49 @@ export default {
       ],
       loginFlag: false,
       seckillInf: [
-        // {
-        //   img:
-        //     "https://m.360buyimg.com//mobilecms/s276x276_jfs/t3214/55/1079586122/175953/1cf3691c/57c6915cN4805e756.jpg!q70.jpg",
-        //   price: "39.90",
-        //   oldPrice: "50"
-        // },
-        // {
-        //   img:
-        //     "https://m.360buyimg.com/mobilecms/s220x220_jfs/t13993/134/2196136987/200722/86bab915/5a607496N3c142877.jpg!q70.jpg",
-        //   price: "39.90",
-        //   oldPrice: "50"
-        // },
-        // {
-        //   img:
-        //     "https://m.360buyimg.com//mobilecms/s276x276_jfs/t3214/55/1079586122/175953/1cf3691c/57c6915cN4805e756.jpg!q70.jpg",
-        //   price: "39.90",
-        //   oldPrice: "50"
-        // },
-        // {
-        //   img:
-        //     "https://m.360buyimg.com//mobilecms/s276x276_jfs/t3214/55/1079586122/175953/1cf3691c/57c6915cN4805e756.jpg!q70.jpg",
-        //   price: "39.90",
-        //   oldPrice: "50"
-        // },
-        // {
-        //   img:
-        //     "https://m.360buyimg.com//mobilecms/s276x276_jfs/t3214/55/1079586122/175953/1cf3691c/57c6915cN4805e756.jpg!q70.jpg",
-        //   price: "39.90",
-        //   oldPrice: "50"
-        // },
-        // {
-        //   img:
-        //     "https://m.360buyimg.com//mobilecms/s276x276_jfs/t3214/55/1079586122/175953/1cf3691c/57c6915cN4805e756.jpg!q70.jpg",
-        //   price: "39.90",
-        //   oldPrice: "50"
-        // },
-        // {
-        //   img:
-        //     "https://m.360buyimg.com//mobilecms/s276x276_jfs/t3214/55/1079586122/175953/1cf3691c/57c6915cN4805e756.jpg!q70.jpg",
-        //   price: "39.90",
-        //   oldPrice: "50"
-        // },
-        // {
-        //   img:
-        //     "https://m.360buyimg.com//mobilecms/s276x276_jfs/t3214/55/1079586122/175953/1cf3691c/57c6915cN4805e756.jpg!q70.jpg",
-        //   price: "39.90",
-        //   oldPrice: "50"
-        // }
+        {
+          img:
+            "https://img12.360buyimg.com/cms/s276x276_jfs/t18787/305/520374958/277588/82c529dc/5a93cf82N895383e3.jpg",
+          price: "39.90",
+          oldPrice: "50"
+        },
+        {
+          img:
+            "https://img12.360buyimg.com/cms/s276x276_jfs/t3181/179/9485478416/254354/43569e3b/58d4b02bNb249674b.jpg",
+          price: "39.90",
+          oldPrice: "50"
+        },
+        {
+          img:
+            "https://img12.360buyimg.com/cms/s276x276_jfs/t18613/123/2641916323/245158/6ea25584/5b03a394Nae3fbaf9.jpg",
+          price: "39.90",
+          oldPrice: "50"
+        },
+        {
+          img: "https://img12.360buyimg.com/cms/s276x276_jfs/t3757/321/1684178475/111788/6175752/582fe757N9caba9fa.jpg",
+          price: "39.90",
+          oldPrice: "50"
+        },
+        {
+          img: "https://img12.360buyimg.com/cms/s276x276_jfs/t19819/45/1028238973/111420/c26123eb/5b11fe59N4f7bbc1c.jpg",
+          price: "39.90",
+          oldPrice: "50"
+        },
+        {
+          img:"https://img12.360buyimg.com/cms/s276x276_jfs/t3403/70/1602876947/69450/b22d5fdf/582d8197Nb6ba63f7.jpg",
+          price: "39.90",
+          oldPrice: "50"
+        },
+        {
+          img:"https://img12.360buyimg.com/cms/s276x276_jfs/t17212/167/351443520/440372/fb547595/5a6c3685Nddd5cc86.jpg",
+          price: "39.90",
+          oldPrice: "50"
+        },
+        {
+          img:"https://img12.360buyimg.com/cms/s276x276_jfs/t19222/258/1894913363/347008/2645d755/5adaeac2N50e5ea73.jpg",
+          price: "39.90",
+          oldPrice: "50"
+        }
       ],
       loveList: [
         {
@@ -293,13 +288,20 @@ export default {
       ]
     };
   },
-  computed:{
-    cartNum(){
+  computed: {
+    cartNum() {
       return this.$store.state.cartGoods;
     }
   },
   methods: {
-    onSearch() {},
+    onSearch() {
+      var vm = this;
+      if (this.searchKey) {
+        this.$store.commit("setSearchKey", this.searchKey);
+        console.log(this.$store.state.searchKey);
+        vm.$router.push("/goodsList");
+      }
+    },
     onCancel() {},
     onLogin() {},
     userPage() {
@@ -329,24 +331,19 @@ export default {
     },
     // floorTabbar
     goClasses() {
-      // let vm = this;
-      // vm.$router.push("/floorTabbar/classes");
       console.log(123);
     }
   },
-  created: function() {
+  mounted: function() {
     let vm = this;
-    // this.$store.commit("getQuery");
-    // this.$store.dispatch("getQuery").then(res => {
-    //   console.log(res.data);
-    // });
-    fetchGet("https://api.m.jd.com/?functionId=nineNine&body={%22pageNum%22:%221%22,%22pageSize%22:%2210%22}&client=nc&clientVersion=1.0.0&_=1520421251586").then(function(res){
-      console.log(JSON.parse(res.text));
-      let data=JSON.parse(res.text);
-      vm.seckillInf=data.nineList
-    })
+    fetchGet(
+      "https://api.m.jd.com/?functionId=nineNine&body={%22pageNum%22:%221%22,%22pageSize%22:%2210%22}&client=nc&clientVersion=1.0.0&_=1520421251586"
+    ).then(function(res) {
+      var data = JSON.parse(res.text);
+      vm.seckillInf = data.nineList;
+    });
     vm.countdown();
-    if (getCookie("yuyu")) {
+    if (sessionStorage.getItem("user")) {
       vm.loginFlag = true;
     }
   }

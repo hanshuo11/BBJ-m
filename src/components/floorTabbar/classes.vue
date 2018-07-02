@@ -5,14 +5,12 @@
     </van-nav-bar>
     <div class="classesCon">
       <ul class="list">
-        
         <li class="listC bdr-bottom" v-for="(inf,index) in classesInf" :key="index">
-          <router-link class="classesSpan" to="/goodsList">
+          <a class="classesSpan" @click="toGoodsList">
             <img :src="inf.img">
             <span>{{inf.title}}</span>
-          </router-link>
+          </a>
         </li>
-        
       </ul>
     </div>
     
@@ -68,6 +66,10 @@ export default {
     goBack(){
       console.log(1);
       this.$router.goBack()
+    },
+    toGoodsList(){
+      this.$router.push('/goodsList');
+       this.$store.commit("setSearchKey", "");
     }
   },
   mounted: function() {
